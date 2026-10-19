@@ -13,6 +13,7 @@ export async function remoteCall<T=Record<string,unknown>>(action:string,args:Re
   const missing=[!address && 'SUPABASE_URL',!key && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean);
   assert(!missing.length,503,`Configurazione incompleta: ${missing.join(', ')}. Imposta le variabili in Vercel per Production e ripeti il deploy.`);
   assert(address && key,503,'Collegamento Supabase incompleto.');
+  assert(!key.startsWith('sb_publishable_'),503,'SUPABASE_SERVICE_ROLE_KEY contiene una chiave Publishable. Inserisci una chiave Secret del progetto in Vercel per Production e ripeti il deploy.');
   let url:URL;
   try { url=new URL(address); } catch { throw new ApiError(503,'SUPABASE_URL non valido: usa il Project URL di Supabase.'); }
   const local=!process.env.VERCEL && url.protocol==='http:' && ['localhost','127.0.0.1'].includes(url.hostname) && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(process.env.APP_URL||'');
@@ -28,8 +29,11 @@ export async function remoteCall<T=Record<string,unknown>>(action:string,args:Re
     result=local ? await fetch(endpoint,options) : await upstreamFetch(endpoint,{...options,dispatcher}) as unknown as Response;
   }catch{throw new ApiError(503,'Il database non risponde. Riprova tra poco.');}
   if(!result.ok){
-    await result.body?.cancel();
-    if(result.status===401||result.status===403)throw new ApiError(503,'Chiave server o permessi Supabase non corretti. Verifica SUPABASE_SERVICE_ROLE_KEY e lo schema SQL.');
+    // Use only a known error code: never expose provider messages or credentials.
+    let permissionDenied=false;
+    try { const failure:unknown=await result.json();permissionDenied=!!failure && typeof failure==='object' && 'code' in failure && failure.code==='42501'; } catch { /* A gateway may return an empty or non-JSON response. */ }
+    if(permissionDenied || result.status===403)throw new ApiError(503,'Permessi Supabase insufficienti. Usa una chiave Secret o service_role dello stesso progetto ed esegui supabase/schema.sql nel SQL Editor.');
+    if(result.status===401)throw new ApiError(503,'Supabase rifiuta la chiave server. Copia una chiave Secret dello stesso progetto in SUPABASE_SERVICE_ROLE_KEY su Vercel per Production, poi ripeti il deploy.');
     if(result.status===404)throw new ApiError(503,'Schema Supabase non disponibile: esegui supabase/schema.sql nel SQL Editor del progetto.');
     throw new ApiError(502,'Collegamento al database non riuscito. Riprova tra poco.');
   }

@@ -33,9 +33,23 @@ async function run(){
     r=await m.exports.GET();assert.equal(r.status,200);assert.deepEqual(await r.json(),{ok:true});
     delete process.env.SUPABASE_URL;process.env.NEXT_PUBLIC_SUPABASE_URL='https://kqjvhtxwdctlmjuvvebh.supabase.co';
     r=await m.exports.GET();assert.equal(r.status,200,'Public project URL alias is supported');
+    process.env.SUPABASE_SERVICE_ROLE_KEY='sb_publishable_fixture';
+    globalThis.fixtureFetch=async()=>{throw Error('A publishable key must not reach the provider');};
+    r=await m.exports.GET();assert.equal(r.status,503);assert.match((await r.json()).error,/chiave Publishable/);
+    process.env.SUPABASE_SERVICE_ROLE_KEY='sb_secret_fixture';
+    globalThis.fixtureFetch=async(url,options)=>{assert.equal(options.headers.apikey,'sb_secret_fixture');assert.equal(options.headers.Authorization,undefined);return Response.json({ok:true});};
+    r=await m.exports.GET();assert.equal(r.status,200,'Secret keys authenticate through apikey without a JWT bearer');
+    process.env.SUPABASE_SERVICE_ROLE_KEY='eyJ.legacy-fixture';
+    globalThis.fixtureFetch=async(url,options)=>{assert.equal(options.headers.Authorization,'Bearer eyJ.legacy-fixture');return Response.json({ok:true});};
+    r=await m.exports.GET();assert.equal(r.status,200,'Legacy server JWTs retain bearer authentication');
+    process.env.SUPABASE_SERVICE_ROLE_KEY='private-fixture-marker';
     for(const [status,pattern] of [[401,/chiave server/i],[403,/permessi/i],[404,/schema\.sql/]]){
       globalThis.fixtureFetch=async()=>new Response('{}',{status});r=await m.exports.GET();const payload=await r.json();assert.equal(r.status,503);assert.match(payload.error,pattern);assert(!JSON.stringify(payload).includes('private-fixture-marker'));
     }
+    globalThis.fixtureFetch=async()=>Response.json({code:'42501',message:'private-fixture-marker'},{status:401});
+    r=await m.exports.GET();data=await r.json();assert.equal(r.status,503);assert.match(data.error,/Permessi Supabase/);assert(!JSON.stringify(data).includes('private-fixture-marker'),'Provider details are never exposed');
+    globalThis.fixtureFetch=async()=>new Response('<html>private-fixture-marker</html>',{status:401});
+    r=await m.exports.GET();data=await r.json();assert.equal(r.status,503);assert.match(data.error,/rifiuta la chiave server/);assert(!JSON.stringify(data).includes('private-fixture-marker'));
     globalThis.fixtureFetch=async()=>Response.json({ok:false});r=await m.exports.GET();assert.equal(r.status,503,'An empty schema cannot pass health check');
     assert(!existsSync(forbidden));
     console.log('PASS: missing Vercel settings give actionable 503 errors; no SQLite fallback; malformed URLs, server key isolation, schema/auth failures and production-origin fallback verified. Provider transport mocked.');

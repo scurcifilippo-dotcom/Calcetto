@@ -70,6 +70,17 @@ i nomi delle variabili da aggiungere. Un errore di schema richiede di eseguire
 non quella anon/publishable. Non inviare chiavi in chat. `npm run test:config`
 verifica questi casi con il trasporto del provider simulato.
 
+Se Supabase rifiuta la chiave, aprire **Project Settings → API Keys → Secret keys**
+nel progetto con riferimento `kqjvhtxwdctlmjuvvebh`. Copiare il valore completo della
+chiave Secret (prefisso `sb_secret_`), non il nome della chiave o la chiave Publishable,
+nel campo privato `SUPABASE_SERVICE_ROLE_KEY` di Vercel per Production. Salvare e
+scegliere **Deployments → ultimo deploy → ⋯ → Redeploy**. Una chiave legacy
+`service_role` valida dello stesso progetto continua a essere supportata.
+Se invece l'errore indica permessi insufficienti, verificare di aver scelto una
+chiave server ed eseguire nuovamente tutto `supabase/schema.sql` nel progetto corretto.
+Il controllo distingue anche l'errore PostgreSQL `42501` senza esporre la risposta
+grezza di Supabase o valori delle chiavi.
+
 ## 3. Creare i quattro primi inviti
 
 Per il dominio Vercel assegnato `https://calcetto-virid.vercel.app`, dopo che
