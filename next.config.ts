@@ -8,7 +8,7 @@ const config: NextConfig = {
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "X-Frame-Options", value: "DENY" },
     { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-  ] }]; },
+  ] },{source:"/calcetto-offline.html",headers:[{key:"Content-Disposition",value:'attachment; filename="calcetto-offline.html"'}]}]; },
   devIndicators: false,
   allowedDevOrigins: ["127.0.0.1"],
 };

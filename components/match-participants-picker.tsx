@@ -10,6 +10,7 @@ type MatchParticipantsPickerProps = {
   confirmedIds?: string[];
   onToggle: (id: string) => void;
   disabled?: boolean;
+  showAvailability?: boolean;
 };
 
 export default function MatchParticipantsPicker({
@@ -18,6 +19,7 @@ export default function MatchParticipantsPicker({
   confirmedIds = [],
   onToggle,
   disabled = false,
+  showAvailability = true,
 }: MatchParticipantsPickerProps) {
   const selected = new Set(selectedIds);
   const confirmed = new Set(confirmedIds);
@@ -39,7 +41,7 @@ export default function MatchParticipantsPicker({
       >
         <span className="player-avatar" aria-hidden="true">{player.photo ? <img src={player.photo} alt="" /> : player.icon}</span>
         <span className="player-meta">
-          <span className="participant-name"><strong className="player-name">{player.name}</strong><AvailabilityBadge name={player.name} confirmed={confirmed.has(player.id)} /></span>
+          <span className="participant-name"><strong className="player-name">{player.name}</strong>{showAvailability && <AvailabilityBadge name={player.name} confirmed={confirmed.has(player.id)} />}</span>
           <span className="player-role">{player.role}</span>
         </span>
         <SelectionIcon size={15} aria-hidden="true" focusable="false" />

@@ -28,6 +28,8 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+.offline-import { margin-top: 24px; gap: 12px; }
+.offline-import input { max-width: 100%; color: var(--text-secondary); }
 
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }

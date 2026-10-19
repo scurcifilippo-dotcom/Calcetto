@@ -1,5 +1,18 @@
 # Calcetto
 
+## Versione offline senza installazione
+
+La versione richiesta attualmente è un unico file HTML: aprire `calcetto-offline.html`
+in Chrome o Edge, anche senza connessione. Partite, giocatori, voti e statistiche
+si salvano nel browser e restano dopo la chiusura. “Backup e dati” permette di
+esportare e ripristinare un archivio JSON. Nessun account o servizio cloud richiesto.
+
+`npm run offline:export` genera `artifacts/calcetto-offline.html` e la copia
+scaricabile `public/calcetto-offline.html`. `npm run test:offline` verifica il flusso.
+Leggere [docs/offline.md](docs/offline.md) per salvataggio e backup.
+
+## Versione online precedente
+
 Sito privato per il gruppo: partite 5 contro 5, convocazioni e conferme facoltative,
 giocatori, stagioni, statistiche e chat con testo, menzioni e sticker emoji.
 Nessuna partita o statistica di esempio: all’avvio ci sono i 15 giocatori concordati.
