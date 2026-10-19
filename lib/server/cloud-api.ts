@@ -85,4 +85,4 @@ export function invitesPost(request:Request){return handle(async()=>{
   const result=await remoteCall<{id:string}>('invite_create',{sessionHash:sessionHash(request),playerId:input.playerId,isAdmin:input.isAdmin===true,reset:input.action==='reset',hash:tokenDigest(raw),id:crypto.randomUUID(),expires});
   return response({id:result.id,url:`${base}/#invite=${raw}`,expires},201);
 });}
-export function cloudHealth(){return handle(async()=>{origin();await remoteCall('ping');return response({ok:true});});}
+export function cloudHealth(){return handle(async()=>{origin();const result=await remoteCall<{ok:boolean}>('ping');assert(result.ok===true,503,'Schema Supabase incompleto: esegui supabase/schema.sql nel SQL Editor.');return response({ok:true});});}

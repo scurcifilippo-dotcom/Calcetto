@@ -57,6 +57,19 @@ I piani gratuiti sono soggetti alle condizioni dei provider, quote e possibili p
 per inattività. Non è stato attivato alcun piano a pagamento. Non abilitare componenti
 aggiuntivi a pagamento per eseguire questa configurazione.
 
+### Se compare un errore dopo il deploy
+
+In Vercel aprire **Environment Variables** e verificare che `SUPABASE_URL` e
+`SUPABASE_SERVICE_ROLE_KEY` siano valorizzate per **Production**, quindi eseguire
+un nuovo deploy. `APP_URL` deve essere `https://calcetto-virid.vercel.app` per il
+dominio assegnato a questo progetto. Per l’URL pubblico Supabase è accettato anche
+il nome `NEXT_PUBLIC_SUPABASE_URL`; la chiave server deve restare nel campo privato.
+Il server Vercel non usa mai SQLite: con impostazioni mancanti `/api/health` indica
+i nomi delle variabili da aggiungere. Un errore di schema richiede di eseguire
+`supabase/schema.sql`, mentre un errore chiave/permessi richiede la chiave server,
+non quella anon/publishable. Non inviare chiavi in chat. `npm run test:config`
+verifica questi casi con il trasporto del provider simulato.
+
 ## 3. Creare i quattro primi inviti
 
 Per il dominio Vercel assegnato `https://calcetto-virid.vercel.app`, dopo che

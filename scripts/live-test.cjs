@@ -16,7 +16,7 @@ async function run(){
   const bundle=await build({entryPoints:['lib/server/store.ts'],bundle:true,platform:'node',format:'esm',write:false});
   const store=await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
   const driver=process.env.CALCETTO_TEST_REMOTE==='1'?await require('./supabase-test-harness.cjs').create():{
-    ...store,env:{SUPABASE_URL:'',SUPABASE_SERVICE_ROLE_KEY:''},remote:false,
+    ...store,env:{SUPABASE_URL:'',NEXT_PUBLIC_SUPABASE_URL:'',SUPABASE_SERVICE_ROLE_KEY:''},remote:false,
     readRaw:()=>store.db().prepare('SELECT body FROM state WHERE id=1').get().body,
     writeRaw:data=>store.db().prepare('UPDATE state SET body=? WHERE id=1').run(JSON.stringify(data)),
     tokenHashes:()=>store.db().prepare('SELECT hash FROM invites').all(),close:()=>store.db().close(),

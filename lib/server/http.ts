@@ -6,7 +6,8 @@ export const configuredOrigin=()=>process.env.APP_URL || (process.env.VERCEL && 
 export function origin(): string {
   const configured = configuredOrigin();
   assert(configured,503,'Indirizzo pubblico non configurato (APP_URL).');
-  const url = new URL(configured);
+  let url:URL;
+  try { url=new URL(configured); } catch { throw new ApiError(503,'APP_URL non valido: usa l’indirizzo HTTPS del sito.'); }
   assert(url.protocol==='https:' || (url.protocol==='http:' && ['localhost','127.0.0.1'].includes(url.hostname)),503,'APP_URL deve usare HTTPS.');
   assert(!url.username && !url.password && url.pathname==='/' && !url.search && !url.hash,503,'APP_URL deve contenere solo l’origine del sito.');
   return url.origin;

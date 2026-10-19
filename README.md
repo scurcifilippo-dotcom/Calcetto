@@ -37,6 +37,7 @@ temporaneo. Dockerfile/render.yaml restano una variante a server singolo con dis
 
 ```sh
 npm run typecheck
+npm run test:config
 npm run build
 npm run test:live
 npm run test:supabase

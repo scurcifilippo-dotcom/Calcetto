@@ -14,7 +14,8 @@
     "admin:invite": "node scripts/admin-invite.mjs",
     "test:live": "node scripts/live-test.cjs",
     "backup": "node scripts/backup.mjs",
-    "test:supabase": "CALCETTO_TEST_REMOTE=1 node scripts/live-test.cjs"
+    "test:supabase": "CALCETTO_TEST_REMOTE=1 node scripts/live-test.cjs",
+    "test:config": "node scripts/config-test.cjs"
   },
   "dependencies": {
     "lucide-react": "1.59.0",
