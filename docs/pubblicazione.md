@@ -59,6 +59,15 @@ aggiuntivi a pagamento per eseguire questa configurazione.
 
 ## 3. Creare i quattro primi inviti
 
+Per il dominio Vercel assegnato `https://calcetto-virid.vercel.app`, dopo che
+`/api/health` restituisce `{"ok":true}`, si può eseguire `supabase/primi-inviti.sql`
+nel SQL Editor privato di Supabase. Il risultato contiene i quattro link reali, da
+consegnare soltanto ai destinatari. Non occorre configurare la chiave in un secondo
+ambiente per questa procedura. Il file usa il dominio effettivo di questo progetto;
+aggiornarlo se il dominio cambia. Dopo il primo amministratore, usare Inviti nel sito.
+
+In alternativa è disponibile il comando CLI:
+
 In un terminale privato del progetto con `SUPABASE_URL`, chiave server e **APP_URL
 uguale all’indirizzo pubblico** già configurati, eseguire:
 
