@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: calcetto
+    runtime: docker
+    plan: starter
+    numInstances: 1
+    healthCheckPath: /api/health
+    autoDeployTrigger: off
+    envVars:
+      - key: APP_URL
+        sync: false
+      - key: CALCETTO_DB_PATH
+        value: /var/data/calcetto.sqlite
+    disk:
+      name: calcetto-data
+      mountPath: /var/data
+      sizeGB: 1

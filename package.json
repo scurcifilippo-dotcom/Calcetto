@@ -1,0 +1,37 @@
+{
+  "name": "calcetto",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "preview:export": "node scripts/export-preview.mjs",
+    "test:smoke": "node scripts/smoke-test.cjs",
+    "test:preview": "node scripts/preview-regression.cjs",
+    "test:chat": "node scripts/chat-smoke.cjs",
+    "admin:invite": "node scripts/admin-invite.mjs",
+    "test:live": "node scripts/live-test.cjs",
+    "backup": "node scripts/backup.mjs",
+    "test:supabase": "CALCETTO_TEST_REMOTE=1 node scripts/live-test.cjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.59.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "undici": "8.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "esbuild": "^0.25.12",
+    "playwright": "1.64.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
